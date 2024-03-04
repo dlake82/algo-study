@@ -1,6 +1,7 @@
 from math import sqrt
 from collections import Counter
 from functools import reduce
+from itertools import combinations
 
 
 def solution(arrayA, arrayB):
@@ -16,27 +17,47 @@ def solution(arrayA, arrayB):
             result.append(n)
         return result
 
-    answer = 0
+    ca, cb = [], []
+    sa, sb = sorted(list(set(arrayA))), sorted(list(set(arrayB)))
 
     def get_factors_list(x): return list(
-        map(Counter, map(get_factor, sorted(list(set(x))))))
+        map(Counter, map(get_factor, x)))
 
-    def get_sift(x): return reduce(lambda prev, next: {key: min(
-        prev[key], next[key]) for key in prev if key in next}, x, x[0])
+    def sift(prev, next):
+        ret = {}
+        for key in prev:
+            if key in next:
+                ret[key] = min(
+                    prev[key], next[key])
 
-    a, b = get_sift(get_factors_list(arrayA)), get_sift(
-        get_factors_list(arrayB))
+        return ret
 
-    print(a, b)
+    def get_sift(x): return reduce(sift, x, x[0])
+
+    fa, fb = get_factors_list(sa), get_factors_list(sb)
+
+    a, b = get_sift(fa), get_sift(fb)
 
     if not len(a) and not len(b):
         return 0
 
-    if len(get_sift([a, b])):
-        return 0
 
-    return reduce(lambda acc, cur: acc * cur, a,
-                  1) if len(a) else reduce(lambda acc, cur: acc * cur, b, 1)
+print(solution([10, 20], [5, 17]))
 
 
-print(solution([10, 17], [5, 20]))
+def solution(elements):
+    answer = 0
+    elements += elements[:-1]
+    n = len(elements)
+    dp = [[0] * n for _ in range(n)]
+    dp[0] = elements[:]
+    for i in range(n):
+        dp[i][0] = elements[i]
+
+    for i in range(1, n):
+        for j in range(1, n):
+            dp[i][j] = dp[i - 1][j] + elements[i]
+
+    print(dp)
+
+    return answer
