@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "algo-study"
+version = "0.1.0"
+description = ""
+authors = ["khw0828 <97077535+gusdn0828@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+heapdict = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

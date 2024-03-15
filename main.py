@@ -367,24 +367,24 @@ graph = {
 
 
 def dijkstra(graph, start):
-    distances = {node: float("inf") for node in graph}
-    distances[start] = 0
+    dists = {node: float("inf") for node in graph}
+    dists[start] = 0
     queue = []
-    heapq.heappush(queue, [distances[start], start])
+    heapq.heappush(queue, [dists[start], start])
 
     while queue:
         current_distance, current_node = heapq.heappop(queue)
 
-        if distances[current_node] < current_distance:
+        if dists[current_node] < current_distance:
             continue
 
         for adjacent, weight in graph[current_node].items():
-            distance = current_distance + weight
-            if distance < distances[adjacent]:
-                distances[adjacent] = distance
-                heapq.heappush(queue, [distance, adjacent])
+            dist = current_distance + weight
+            if dist < dists[adjacent]:
+                dists[adjacent] = dist
+                heapq.heappush(queue, [dist, adjacent])
 
-    return distances
+    return dists
 
 
 print(dijkstra(graph, "A"))
@@ -576,3 +576,33 @@ graph[6].append(7)
 indegree[7] += 1
 
 print(topology_sort(graph, indegree))
+
+
+def bellman_ford(graph, start, n):
+    dists = [float("Inf")] * n
+    dists[start] = 0
+
+    for _ in range(n - 1):
+        for u, v, w in graph:
+            if dists[u] != float("Inf") and dists[u] + w < dists[v]:
+                dists[v] = dists[u] + w
+
+    for u, v, w in graph:
+        if dists[u] != float("Inf") and dists[u] + w < dists[v]:
+            return False
+
+    return dists
+
+
+graph = [
+    [0, 1, -1],
+    [0, 2, 4],
+    [1, 2, 3],
+    [1, 3, 2],
+    [1, 4, 2],
+    [3, 2, 5],
+    [3, 1, 1],
+    [4, 3, -3],
+]
+
+print(bellman_ford(graph, "A", 5))
